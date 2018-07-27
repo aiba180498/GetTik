@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Menu"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="16dp">
+
+
+    <Button
+        android:id="@+id/btnOpenSuperviserForm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Супервайзер"
+        android:layout_margin="12dp"
+        android:onClick="openSuperviserForm"/>
+
+    <Button
+        android:id="@+id/btnOpenVoditelForm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Водитель"
+        android:layout_margin="12dp"
+        android:onClick="openVoditelForm"/>
+
+    <Button
+        android:id="@+id/btnOpenMenedzherForm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Менеджер"
+        android:layout_margin="12dp"
+        android:onClick="openMenedzherForm"/>
+</LinearLayout>

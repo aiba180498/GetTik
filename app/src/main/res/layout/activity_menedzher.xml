@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp"
+                android:baselineAligned="false">
+
+                <TextView
+                    android:id="@+id/txt_document_osnovaniya"
+                    android:layout_width="112dp"
+                    android:layout_height="wrap_content"
+                    android:text="Документ основания"
+                    android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/field_document_osnovaniya"
+                    android:layout_width="191dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:textSize="16sp"
+                    android:hint="Введите документ"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp">
+
+                <TextView
+                    android:id="@+id/txt_nomer"
+                    android:layout_width="112dp"
+                    android:layout_height="wrap_content"
+                    android:text="Номер"
+                    android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/field_nomer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="16sp"
+                    android:hint="Введите номер"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp">
+
+                <TextView
+                    android:id="@+id/txt_data"
+                    android:layout_width="112dp"
+                    android:layout_height="wrap_content"
+                    android:text="Дата"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/field_data"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:inputType="date"
+                    android:textSize="16sp"
+                    android:hint="Введите дату"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp">
+
+                <TextView
+                    android:id="@+id/txt_kolichestvo_fact"
+                    android:layout_width="112dp"
+                    android:layout_height="wrap_content"
+                    android:text="Количество"
+                    android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/field_kolichestvo_fact"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:inputType="number"
+                    android:textSize="16sp"
+                    android:hint="Введите количество"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp">
+
+                <TextView
+                    android:id="@+id/txt_ves_fact"
+                    android:layout_width="112dp"
+                    android:layout_height="wrap_content"
+                    android:text="Вес"
+                    android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/field_ves_fact"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:inputType="number"
+                    android:textSize="16sp"
+                    android:hint="Введите вес"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp">
+
+                <TextView
+                    android:id="@+id/txt_volume"
+                    android:layout_width="112dp"
+                    android:layout_height="wrap_content"
+                    android:text="Объем"
+                    android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/field_volume"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:inputType="number"
+                    android:textSize="16sp"
+                    android:hint="Введите объем"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp">
+
+                <TextView
+                    android:id="@+id/txt_upakovka"
+                    android:layout_width="112dp"
+                    android:layout_height="wrap_content"
+                    android:text="Упаковка"
+                    android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/field_upakovka"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="16sp"
+                    android:hint="Введите упаковку"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp"
+                android:gravity="center">
+
+                <CheckBox
+                    android:id="@+id/txt_povrezhden"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Груз поврежден"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp">
+
+                <TextView
+                    android:id="@+id/txt_transport"
+                    android:layout_width="112dp"
+                    android:layout_height="wrap_content"
+                    android:text="Транспорт"
+                    android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/field_transport"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="16sp"
+                    android:hint="Введите транспорт"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp">
+
+                <TextView
+                    android:id="@+id/txt_zakazchik"
+                    android:layout_width="112dp"
+                    android:layout_height="wrap_content"
+                    android:text="Заказчик"
+                    android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/field_zakazchik"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="16sp"
+                    android:hint="Введите заказчика"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp">
+
+                <TextView
+                    android:id="@+id/txt_otpravitel"
+                    android:layout_width="112dp"
+                    android:layout_height="wrap_content"
+                    android:text="Отправитель"
+                    android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/field_otpravitel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="16sp"
+                    android:hint="Введите отправителя"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp">
+
+                <TextView
+                    android:id="@+id/txt_pochta_zakazchika"
+                    android:layout_width="112dp"
+                    android:layout_height="wrap_content"
+                    android:text="Почта заказчика"
+                    android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/field_pochtazakazchika"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:inputType="textEmailAddress"
+                    android:textSize="16sp"
+                    android:hint="Введите почту заказчика"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp"
+                android:baselineAligned="false">
+
+                <TextView
+                    android:id="@+id/txt_soprov_document"
+                    android:layout_width="112dp"
+                    android:layout_height="wrap_content"
+                    android:text="Сопроводительный документ"
+                    android:textSize="16sp"
+                    />
+
+                <EditText
+                    android:id="@+id/field_soprov_document"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="16sp"
+                    android:hint="Введите сопроводительный документ"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp">
+
+                <TextView
+                    android:id="@+id/txt_poluchatel"
+                    android:layout_width="112dp"
+                    android:layout_height="wrap_content"
+                    android:text="Получатель"
+                    android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/field_poluchatel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="16sp"
+                    android:hint="Введите получателя"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp">
+
+                <TextView
+                    android:id="@+id/txt_manager"
+                    android:layout_width="112dp"
+                    android:layout_height="wrap_content"
+                    android:text="Менеджер"
+                    android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/field_manager"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="16sp"
+                    android:hint="Введите менеджера"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp">
+
+                <TextView
+                    android:id="@+id/txt_podrazdelenie"
+                    android:layout_width="112dp"
+                    android:layout_height="wrap_content"
+                    android:text="Подразделение"
+                    android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/field_podrazdelenie"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="16sp"
+                    android:hint="Введите подразделение"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp">
+
+                <TextView
+                    android:id="@+id/txt_comment"
+                    android:layout_width="112dp"
+                    android:layout_height="wrap_content"
+                    android:text="Комментарий"
+                    android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/field_comment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="16sp"
+                    android:hint="Введите комментарий"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp">
+
+                <TextView
+                    android:id="@+id/txt_foto"
+                    android:layout_width="112dp"
+                    android:layout_height="wrap_content"
+                    android:text="Фото"
+                    android:textSize="16sp"
+                    android:layout_weight="1"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_margin="16dp"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/imageViewMendzher"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="#969696"/>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnMenedzherPodtverdit"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_margin="8dp"
+                android:text="Отправить"/>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

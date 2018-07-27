@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="56dp"
+    android:paddingStart="48dp"
+    android:orientation="vertical"
+    >
+
+    <EditText
+        android:id="@+id/field_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Введите email"
+        android:inputType="textEmailAddress"
+        android:textSize="24sp" />
+
+    <EditText
+        android:id="@+id/field_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Введите пароль"
+        android:inputType="textPassword"
+        android:layout_marginTop="30dp"
+        android:textSize="24sp"/>
+
+    <Button
+        android:id="@+id/btn_enter"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:text="Войти"
+        android:layout_marginTop="30dp"
+        android:textSize="20sp"/>
+
+    <CheckBox
+        android:id="@+id/remember_me"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Запомнить меня"
+        android:layout_marginTop="30dp"
+        android:textSize="24sp"/>
+
+
+</LinearLayout>

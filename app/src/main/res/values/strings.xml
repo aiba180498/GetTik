@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">FunctionCheck</string>
+    <string name="checkbox">example.sunny.functioncheck.checkbox</string>
+    <string name="email">example.sunny.functioncheck.email</string>
+    <string name="password">example.sunny.functioncheck.password</string>
+    <string name="google_maps_API_key">AIzaSyDdWEzGhJWCyv6VJjw4WO20DcNGWcm90uQ</string>
+</resources>
