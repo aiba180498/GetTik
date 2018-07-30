@@ -1,62 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".VoditelActivity">
+    tools:context=".VoditelItemActivity"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="16dp">
 
-    <LinearLayout
-        android:id="@+id/searchVoditel"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:padding="5dp"
-        android:orientation="horizontal">
+        android:layout_height="90dp">
 
-        <EditText
-            android:id="@+id/searchFieldVoditel"
+        <TextView
+            android:id="@+id/id1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
-            android:hint="Начните вводить номер заказа"
-            android:inputType="textPersonName" />
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:text="Номер заказа: "
+            android:textColor="#000"
+            android:textSize="20sp" />
 
-        <ImageButton
-            android:id="@+id/btnSearchVoditel"
+        <TextView
+            android:id="@+id/id4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            app:srcCompat="@android:drawable/ic_menu_search" />
+            android:layout_below="@+id/id1"
+            android:textColor="#000"
+            android:textSize="20sp"
+            android:layout_toEndOf="@+id/id1" />
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/id3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:textColor="#000"
+            android:textSize="20sp"
+            android:layout_below="@+id/id1"
+            android:text="Дата: " />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="507dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="4dp">
+        <TextView
+            android:id="@+id/id2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:textColor="#000"
+            android:textSize="20sp"
+            android:layout_toEndOf="@+id/id1" />
 
-        <ImageView
-                android:id="@+id/imageViewVoditel"
-                android:layout_width="350dp"
-                android:layout_height="300dp"
-                android:background="#969696"/>
+    </RelativeLayout>
 
         <Button
             android:id="@+id/btnPokazatMarshrut"
-            android:layout_width="402dp"
+            android:layout_width="match_parent"
             android:layout_height="60dp"
             android:text="Показать маршрут" />
 
         <Button
             android:id="@+id/btnGruzDostavlenVoditel"
-            android:layout_width="402dp"
+            android:layout_width="match_parent"
             android:layout_height="60dp"
             android:text="Доставлено" />
-    </LinearLayout>
-</RelativeLayout>
+
+</LinearLayout>

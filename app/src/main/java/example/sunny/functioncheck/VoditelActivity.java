@@ -7,6 +7,9 @@ import android.graphics.Camera;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,78 +20,44 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 public class VoditelActivity extends AppCompatActivity {
 
-    private static final int ERROR_DIALOG_REQUEST = 9001;
+    private static final String TAG = "VoditelActivity";
 
-    private EditText searchRequest;
-    private Button dostavleno;
-    private ImageButton search;
-    private ImageView imageView;
-
-    static final int CAM_REQUEST = 1;
+    //vars
+    private ArrayList<String> mDates = new ArrayList<>();
+    private ArrayList<String> mNomera = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_voditel);
+        setContentView(R.layout.activity_poisk_voditel);
 
-        search = (ImageButton) findViewById(R.id.btnSearchVoditel);
-        dostavleno = (Button) findViewById(R.id.btnGruzDostavlenVoditel);
-        imageView = (ImageView) findViewById(R.id.imageViewVoditel);
+        Log.d(TAG, "onCreate: started");
 
+        initZayavki();
+    }
 
-        dostavleno.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent camera_intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(camera_intent, CAM_REQUEST);
-            }
-        });
+    private void initZayavki(){
 
-        if (isServicesOk()){
-            init();
+        for (int i = 0; i < 20; i++){
+            mDates.add((i + 2)+ ".09.18");
+            mNomera.add("N" + (i + 1));
         }
+
+        initRecyclerView();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == CAM_REQUEST && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            imageView.setImageBitmap(imageBitmap);
-        }
+    private void initRecyclerView(){
+        Log.d(TAG, "initRecyclerView: started");
+        RecyclerView recyclerView = findViewById(R.id.recycler_voditel);
+        ZayavkiAdapter mAdapter = new ZayavkiAdapter(VoditelActivity.this, mDates, mNomera);
+        recyclerView.setAdapter(mAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
-
-    private void init(){
-        Button BtnMap = (Button) findViewById(R.id.btnPokazatMarshrut);
-
-        BtnMap.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(VoditelActivity.this, MapVoditelActivity.class);
-                startActivity(intent);
-            }
-        });
-    }
-
-    public boolean isServicesOk() {
-        int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(VoditelActivity.this);
-
-        if (available == ConnectionResult.SUCCESS){
-            //everything is fine and user can make map requests
-            return true;
-        } else if (GoogleApiAvailability.getInstance().isUserResolvableError(available)){
-            //an error occured but we can fix it
-            Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(VoditelActivity.this, available, ERROR_DIALOG_REQUEST);
-            dialog.show();
-        } else {
-            Toast.makeText(VoditelActivity.this, "You can't make request", Toast.LENGTH_SHORT).show();
-        }
-        return false;
-    }
 
 }

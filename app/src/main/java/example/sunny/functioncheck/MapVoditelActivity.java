@@ -2,9 +2,9 @@ package example.sunny.functioncheck;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
+import android.graphics.Color;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,12 +19,23 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MapVoditelActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -40,6 +51,7 @@ public class MapVoditelActivity extends FragmentActivity implements OnMapReadyCa
     private Boolean mLocationPermissionGranted = false;
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationProviderClient;
+    private ArrayList<LatLng> listPoints;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,7 +76,99 @@ public class MapVoditelActivity extends FragmentActivity implements OnMapReadyCa
                 return;
             }
             mMap.setMyLocationEnabled(true);
+
+            mMap.getUiSettings().setMyLocationButtonEnabled(true);
+            mMap.getUiSettings().setZoomControlsEnabled(true);
+            mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+                @Override
+                public void onMapLongClick(LatLng latLng) {
+                    //reset marker if already 2
+                    if (listPoints.size() == 2){
+                        listPoints.clear();
+                        mMap.clear();
+                    }
+
+                    //save first point select
+                    listPoints.add(latLng);
+                    //create marker
+                    MarkerOptions markerOptions = new MarkerOptions();
+                    markerOptions.position(latLng);
+
+                    if(listPoints.size() == 1){
+                        //Add first marker to the map
+                        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+                    } else {
+                        //Add second marker to the map
+                        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
+                    }
+                    mMap.addMarker(markerOptions);
+
+                    if (listPoints.size() == 2){
+                        //Create the URL to get request from first marker to second marker
+                        String url = getRequestURL(listPoints.get(0), listPoints.get(1));
+                        TaskRequestDirections taskRequestDirections = new TaskRequestDirections();
+                        taskRequestDirections.execute(url);
+                    }
+                }
+            });
+
         }
+    }
+
+    private String getRequestURL(LatLng origin, LatLng destination) {
+        //value of origin
+        String str_orig = "origin=" + origin.latitude + ", " + origin.longitude;
+        //value of destination
+        String str_dest = "destination" + destination.latitude + ", " + destination.longitude;
+        //set value enable the sensor
+        String sensor = "sensor=false";
+        //Mode for find direction
+        String mode = "mode=driving";
+        //Build the full param
+        String param = str_orig + "&" + str_dest + "&" + sensor + "&" + mode;
+        //Output form
+        String output = "json";
+        //Create URL to request
+        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + param;
+        return url;
+    }
+
+    private String requestDirection(String reqUrl) throws IOException {
+        String responseString = "";
+        InputStream inputStream = null;
+        HttpURLConnection httpURLConnection = null;
+        try {
+
+            URL url = new URL(reqUrl);
+            httpURLConnection = (HttpURLConnection) url.openConnection();
+            httpURLConnection.connect();
+
+            //Get the response result
+            inputStream = httpURLConnection.getInputStream();
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+            StringBuffer stringBuffer = new StringBuffer();
+            String line = "";
+            while ( (line = bufferedReader.readLine()) != null ){
+                stringBuffer.append(line);
+            }
+
+            responseString = stringBuffer.toString();
+            bufferedReader.close();
+            inputStreamReader.close();
+
+        } catch (Exception e){
+
+            e.printStackTrace();
+        } finally {
+            if (inputStream != null){
+                inputStream.close();
+            }
+            httpURLConnection.disconnect();
+        }
+
+        return responseString;
     }
 
     private void getDeviceLocation() {
@@ -105,6 +209,8 @@ public class MapVoditelActivity extends FragmentActivity implements OnMapReadyCa
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
 
         mapFragment.getMapAsync(MapVoditelActivity.this);
+
+        listPoints = new ArrayList<>();
     }
 
     private void getLocationPermission(){
@@ -151,6 +257,79 @@ public class MapVoditelActivity extends FragmentActivity implements OnMapReadyCa
                     //initialize our map
                     initMap();
                 }
+            }
+        }
+    }
+
+    public class TaskRequestDirections extends AsyncTask<String, Void, String>{
+
+        @Override
+        protected String doInBackground(String... strings) {
+            String responseString = "";
+            try {
+                responseString = requestDirection(strings[0]);
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+
+            return responseString;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            //Parse json here
+
+            TaskParser taskParser = new TaskParser();
+            taskParser.execute(s);
+        }
+    }
+
+    public class TaskParser extends AsyncTask<String, Void, List<List<HashMap<String, String>>>>{
+
+        @Override
+        protected List<List<HashMap<String, String>>> doInBackground(String... strings) {
+            JSONObject jsonObject = null;
+            List<List<HashMap<String, String>>> routes = null;
+            try {
+                jsonObject = new JSONObject(strings[0]);
+                DirectionsParcer directionsParcer = new DirectionsParcer();
+                routes = directionsParcer.parse(jsonObject);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return routes;
+        }
+
+        @Override
+        protected void onPostExecute(List<List<HashMap<String, String>>> lists) {
+            //Get list rout and display it into the map
+
+            ArrayList points = null;
+
+            PolylineOptions polylineOptions = null;
+
+            for (List<HashMap<String, String>> path : lists){
+                points = new ArrayList();
+                polylineOptions = new PolylineOptions();
+
+                for (HashMap<String, String> point : path){
+                    double lat = Double.parseDouble(point.get("lat"));
+                    double lon = Double.parseDouble(point.get("lon"));
+
+                    points.add(new LatLng(lat, lon));
+                }
+
+                polylineOptions.addAll(points);
+                polylineOptions.width(15);
+                polylineOptions.color(Color.BLUE);
+                polylineOptions.geodesic(true);
+            }
+
+            if (polylineOptions != null){
+                mMap.addPolyline(polylineOptions);
+            } else {
+                Toast.makeText(MapVoditelActivity.this, "Direction not found!", Toast.LENGTH_SHORT).show();
             }
         }
     }

@@ -7,24 +7,24 @@ import android.util.Log;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class SuperviserItemActivity extends AppCompatActivity {
+public class ManagerItemActivity extends AppCompatActivity{
 
-    private static final String TAG = "SuperviserItemActivity";
+    private static final String TAG = "ManagerItemActivity";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_superviser);
+        setContentView(R.layout.activity_menedzher);
 
         getIncomingIntent();
     }
 
     private void getIncomingIntent(){
         Log.d(TAG, "getIncomingIntent: checking for incoming intents");
-        if(getIntent().hasExtra("nom") && getIntent().hasExtra("dat")){
+        if(getIntent().hasExtra("nomer") && getIntent().hasExtra("data")){
 
-            String date = getIntent().getStringExtra("dat");
-            String nomer = getIntent().getStringExtra("nom");
+            String date = getIntent().getStringExtra("data");
+            String nomer = getIntent().getStringExtra("nomer");
 
             setZayavka(date, nomer);
         }
@@ -40,4 +40,3 @@ public class SuperviserItemActivity extends AppCompatActivity {
         etNomer.setText(mNomer);
     }
 }
-

@@ -1,44 +1,49 @@
 package example.sunny.functioncheck;
 
-import android.app.ListActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import java.util.ArrayList;
 
 
 public class SuperviserActivity extends AppCompatActivity {
 
-    private ListView mListView;
+    private static final String TAG = "SuperviserActivity";
+
+    //vars
+    private ArrayList<String> mDates = new ArrayList<>();
+    private ArrayList<String> mNomera = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_poisk_superviser);
 
-        mListView = (ListView) findViewById(R.id.listView);
+        Log.d(TAG, "onCreate: started");
 
-        final ArrayList<Zayavka> zayavki = new ArrayList<>();
+        initZayavki();
+    }
 
-        for (int i = 0; i < 10; i++){
-            zayavki.add(new Zayavka("10.07." + (i + 5), "N" + (i + 1)));
+    private void initZayavki(){
+
+        for (int i = 0; i < 20; i++){
+            mDates.add((i + 4)+ ".12.18");
+            mNomera.add("N" + (i + 1));
         }
 
-        ZayavkiAdapter adapter = new ZayavkiAdapter(SuperviserActivity.this,R.layout.layout_list_item,zayavki);
-        mListView.setAdapter(adapter);
-
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(SuperviserActivity.this, "You clicked" + zayavki.get(i), Toast.LENGTH_SHORT).show();
-            }
-        });
+        initRecyclerView();
     }
+
+    private void initRecyclerView(){
+        Log.d(TAG, "initRecyclerView: started");
+        RecyclerView recyclerView = findViewById(R.id.recycler_superviser);
+        SuperviserRecyclerAdapter mAdapter = new SuperviserRecyclerAdapter(SuperviserActivity.this, mDates, mNomera);
+        recyclerView.setAdapter(mAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    }
+
 
 }

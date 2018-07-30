@@ -2,6 +2,9 @@ package example.sunny.functioncheck;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -9,43 +12,43 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 public class MenedzherActivity extends AppCompatActivity {
 
-    private Button btnSend, btnCamera;
-    private EditText etNomer, etZakazchik, etOtpravitel, etPoluchatel,
-            etKolichestvo, etVes, etVolume;
-    private EditText etDocumentOsnovaniya, etUpakovka, etTransport,
-            etSoprovoditelnyiDocument, etPochtaZakazchika, etMenedzher,
-            etPodrazdelenie, etCommentariy;
-    private TextView tvData;
-    private CheckBox cbPovrezhden;
+    private static final String TAG = "MenedzherActivity";
+
+    //vars
+    private ArrayList<String> mDates = new ArrayList<>();
+    private ArrayList<String> mNomera = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_menedzher);
+        setContentView(R.layout.activity_poisk_manager);
 
-        etNomer = (EditText) findViewById(R.id.field_nomer);
-        tvData = (TextView) findViewById(R.id.field_data);
-        etZakazchik = (EditText) findViewById(R.id.field_zakazchik);
-        etOtpravitel = (EditText) findViewById(R.id.field_otpravitel);
-        etPoluchatel = (EditText) findViewById(R.id.field_poluchatel);
-        etKolichestvo = (EditText) findViewById(R.id.field_kolichestvo_fact);
-        etVes = (EditText) findViewById(R.id.field_ves_fact);
-        etVolume = (EditText) findViewById(R.id.field_volume);
-        cbPovrezhden = (CheckBox) findViewById(R.id.txt_povrezhden);
-        btnSend = (Button) findViewById(R.id.btnMenedzherPodtverdit);
+        Log.d(TAG, "onCreate: started");
 
-        sohranitDannye();
-
+        initZayavki();
     }
 
-    public void sohranitDannye(){
-        btnSend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(MenedzherActivity.this, "Отправлено", Toast.LENGTH_SHORT).show();
-            }
-        });
+    private void initZayavki(){
+
+        for (int i = 0; i < 20; i++){
+            mDates.add((i + 3)+ ".07.18");
+            mNomera.add("N" + (i + 1));
+        }
+
+        initRecyclerView();
     }
+
+    private void initRecyclerView(){
+        Log.d(TAG, "initRecyclerView: started");
+        RecyclerView recyclerView = findViewById(R.id.recycler_manager);
+        RecyclerViewAdapter mAdapter = new RecyclerViewAdapter(MenedzherActivity.this, mDates, mNomera);
+        recyclerView.setAdapter(mAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    }
+
+
 }

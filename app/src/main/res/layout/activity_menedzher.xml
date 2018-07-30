@@ -1,4 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+private Button btnSend, btnCamera;
+    private EditText etNomer, etZakazchik, etOtpravitel, etPoluchatel,
+            etKolichestvo, etVes, etVolume;
+    private EditText etDocumentOsnovaniya, etUpakovka, etTransport,
+            etSoprovoditelnyiDocument, etPochtaZakazchika, etMenedzher,
+            etPodrazdelenie, etCommentariy;
+    private TextView tvData;
+    private CheckBox cbPovrezhden;
+
+    etNomer = (EditText) findViewById(R.id.field_nomer);
+        tvData = (TextView) findViewById(R.id.field_data);
+        etZakazchik = (EditText) findViewById(R.id.field_zakazchik);
+        etOtpravitel = (EditText) findViewById(R.id.field_otpravitel);
+        etPoluchatel = (EditText) findViewById(R.id.field_poluchatel);
+        etKolichestvo = (EditText) findViewById(R.id.field_kolichestvo_fact);
+        etVes = (EditText) findViewById(R.id.field_ves_fact);
+        etVolume = (EditText) findViewById(R.id.field_volume);
+        cbPovrezhden = (CheckBox) findViewById(R.id.txt_povrezhden);
+        btnSend = (Button) findViewById(R.id.btnMenedzherPodtverdit);
+
+        sohranitDannye();
+
+public void sohranitDannye(){
+        btnSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(MenedzherActivity.this, "Отправлено", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+-->
+
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"

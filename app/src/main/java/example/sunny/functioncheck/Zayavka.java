@@ -24,5 +24,4 @@ public class Zayavka {
     public void setNomer(String nomer) {
         this.nomer = nomer;
     }
-
 }

@@ -14,19 +14,20 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class ZayavkiAdapter extends RecyclerView.Adapter<ZayavkiAdapter.ViewHolder>{
+public class SuperviserRecyclerAdapter extends RecyclerView.Adapter<SuperviserRecyclerAdapter.ViewHolder>{
 
-    private static final String TAG = "ZayavkiAdapter";
+    private static final String TAG = "SupervRecyclerAdapt";
 
     private ArrayList<String> mDates = new ArrayList<>();
     private ArrayList<String> mNomera = new ArrayList<>();
     private Context mContext;
 
-    public ZayavkiAdapter(Context mContext, ArrayList<String> mDates, ArrayList<String> mNomera) {
+    public SuperviserRecyclerAdapter (Context mContext, ArrayList<String> mDates, ArrayList<String> mNomera) {
         this.mDates = mDates;
         this.mNomera = mNomera;
         this.mContext = mContext;
     }
+
 
     @NonNull
     @Override
@@ -48,9 +49,9 @@ public class ZayavkiAdapter extends RecyclerView.Adapter<ZayavkiAdapter.ViewHold
             public void onClick(View view) {
                 Toast.makeText(mContext, mDates.get(i), Toast.LENGTH_SHORT).show();
 
-                Intent intent = new Intent(mContext, VoditelItemActivity.class);
-                intent.putExtra("no", mNomera.get(i));
-                intent.putExtra("da", mDates.get(i));
+                Intent intent = new Intent(mContext, SuperviserItemActivity.class);
+                intent.putExtra("nom", mNomera.get(i));
+                intent.putExtra("dat", mDates.get(i));
                 mContext.startActivity(intent);
             }
         });
@@ -62,6 +63,7 @@ public class ZayavkiAdapter extends RecyclerView.Adapter<ZayavkiAdapter.ViewHold
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
+
         TextView tvDate, tvNomer;
         RelativeLayout parentLayout;
 
@@ -74,5 +76,4 @@ public class ZayavkiAdapter extends RecyclerView.Adapter<ZayavkiAdapter.ViewHold
         }
 
     }
-
 }

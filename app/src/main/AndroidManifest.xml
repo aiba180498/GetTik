@@ -37,6 +37,9 @@
         <activity android:name=".VoditelActivity" />
         <activity android:name=".MenedzherActivity" />
         <activity android:name=".MapVoditelActivity"></activity>
+        <activity android:name=".ManagerItemActivity" />
+        <activity android:name=".SuperviserItemActivity" />
+        <activity android:name=".VoditelItemActivity"/>
     </application>
 
 </manifest>
