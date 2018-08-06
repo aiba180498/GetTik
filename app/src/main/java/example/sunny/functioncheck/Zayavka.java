@@ -1,6 +1,8 @@
 package example.sunny.functioncheck;
 
-public class Zayavka {
+import java.io.Serializable;
+
+public class Zayavka implements Serializable {
     private String date;
     private String nomer;
 

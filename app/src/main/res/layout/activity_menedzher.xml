@@ -435,7 +435,8 @@ public void sohranitDannye(){
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="#969696"/>
+                    android:background="#969696"
+                    android:src="@drawable/cover"/>
             </LinearLayout>
 
             <Button
@@ -443,7 +444,8 @@ public void sohranitDannye(){
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_margin="8dp"
-                android:text="Отправить"/>
+                android:text="Отправить"
+                android:textColor="#db5858"/>
 
         </LinearLayout>
     </ScrollView>

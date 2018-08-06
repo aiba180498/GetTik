@@ -1,7 +1,5 @@
 package example.sunny.functioncheck;
 
-import android.content.Context;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -10,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -18,14 +15,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     private static final String TAG = "RecyclerViewAdapter";
 
-    private ArrayList<String> mDates = new ArrayList<>();
-    private ArrayList<String> mNomera = new ArrayList<>();
-    private Context mContext;
+    private ArrayList<Zayavka> mZayavkas;
+    private Callback mCallback;
 
-    public RecyclerViewAdapter(Context mContext, ArrayList<String> mDates, ArrayList<String> mNomera) {
-        this.mDates = mDates;
-        this.mNomera = mNomera;
-        this.mContext = mContext;
+    public RecyclerViewAdapter(ArrayList<Zayavka> zayavkas) {
+        this.mZayavkas = zayavkas;
     }
 
     @NonNull
@@ -40,25 +34,22 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int i) {
         Log.d(TAG, "onBindViewHolder: called");
 
-        viewHolder.tvDate.setText(mDates.get(i));
-        viewHolder.tvNomer.setText(mNomera.get(i));
+        viewHolder.tvDate.setText(mZayavkas.get(i).getDate());
+        viewHolder.tvNomer.setText(mZayavkas.get(i).getNomer());
         
         viewHolder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(mContext, mDates.get(i), Toast.LENGTH_SHORT).show();
-
-                Intent intent = new Intent(mContext, ManagerItemActivity.class);
-                intent.putExtra("nomer", mNomera.get(i));
-                intent.putExtra("data", mDates.get(i));
-                mContext.startActivity(intent);
+                if (mCallback != null) {
+                    mCallback.onClickItem(i);
+                }
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return mNomera.size();
+        return mZayavkas.size();
     }
 
 
@@ -75,6 +66,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             parentLayout = itemView.findViewById(R.id.recycle_relative_layout);
         }
 
+    }
+
+    public void setCallback(Callback mCallback) {
+        this.mCallback = mCallback;
+    }
+
+    public interface Callback {
+        void onClickItem(int position);
     }
     
 }

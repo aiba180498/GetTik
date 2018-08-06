@@ -1,64 +1,183 @@
 package example.sunny.functioncheck;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.AutocompletePrediction;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.PlaceBuffer;
+import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-public class MapVoditelActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapVoditelActivity extends AppCompatActivity implements OnMapReadyCallback,
+        GoogleApiClient.OnConnectionFailedListener{
 
-    private static final String TAG = "MapActivity";
+    private static final String TAG = "MapVoditelActivity";
 
+    //const
     private static final String FINE_LOCATION = android.Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COARSE_LOCATION = android.Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
     private static final float DEFAULT_ZOOM = 15f;
+    private static final LatLngBounds LAT_LNG_BOUNDS = new LatLngBounds(new LatLng(-40, -168), new LatLng(71, 136));
 
-    //VARS
+    //vars
     private Boolean mLocationPermissionGranted = false;
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private ArrayList<LatLng> listPoints;
+    private PlaceAutocompleteAdapter mPlaceAutocompleteAdapter;
+    private GoogleApiClient mGoogleApiClient;
+    private Place mPlace;
+
+    //widgets
+    private AutoCompleteTextView etSearchBar;
+    private ImageView iwMyLocation;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_map_voditel );
+        setContentView(R.layout.activity_map_voditel);
+
+        etSearchBar = (AutoCompleteTextView) findViewById(R.id.etSearch);
+        iwMyLocation = (ImageView) findViewById(R.id.iwMyLoc);
 
         getLocationPermission();
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    private void geoLocate(){
+        Log.d(TAG, "geoLocate: goelocating");
+
+        String searchString = etSearchBar.getText().toString();
+
+        Geocoder geocoder = new Geocoder(MapVoditelActivity.this);
+        List<Address> list = new ArrayList<Address>();
+
+        try{
+            list = geocoder.getFromLocationName(searchString, 1);
+        }catch (IOException e){
+            Log.d(TAG, "geoLocate: IOExeption" + e.getMessage());
+        }
+
+        if (list.size() > 0){
+            Address address = list.get(0);
+
+            Log.d(TAG, "geoLocate: found a location" + address.toString());
+
+            moveCamera(new LatLng(address.getLatitude(), address.getLongitude()), DEFAULT_ZOOM, address.getAddressLine(0));
+        }
+    }
+
+    private void init(){
+        Log.d(TAG, "init: initializing");
+
+        mGoogleApiClient = new GoogleApiClient
+                .Builder(this)
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .enableAutoManage(this, this)
+                .build();
+
+        mPlaceAutocompleteAdapter = new PlaceAutocompleteAdapter(MapVoditelActivity.this, mGoogleApiClient,
+                LAT_LNG_BOUNDS, null);
+
+        etSearchBar.setAdapter(mPlaceAutocompleteAdapter);
+
+        etSearchBar.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if (i == EditorInfo.IME_ACTION_DONE
+                        || i == EditorInfo.IME_ACTION_SEARCH
+                        || keyEvent.getAction() == KeyEvent.ACTION_DOWN
+                        || keyEvent.getAction() == KeyEvent.KEYCODE_ENTER){
+
+                    //execute method for searching
+                    geoLocate();
+                }
+
+                return false;
+            }
+        });
+
+        iwMyLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "onClick: finding location");
+                getDeviceLocation();
+            }
+        });
+
+        hideSoftKeyBoard();
+    }
+
+    private void getDeviceLocation() {
+        Log.d(TAG, "getDeviceLocation: started");
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
+        try {
+            if (mLocationPermissionGranted) {
+
+                com.google.android.gms.tasks.Task location = mFusedLocationProviderClient.getLastLocation();
+                location.addOnCompleteListener(new OnCompleteListener() {
+                    @Override
+                    public void onComplete(@NonNull com.google.android.gms.tasks.Task task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "onComplete: found location!");
+                            Location currentLocation = (Location) task.getResult();
+
+                            moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
+                                    DEFAULT_ZOOM, "My Location");
+
+                        } else {
+                            Log.d(TAG, "onComplete: current location is null");
+                            Toast.makeText(MapVoditelActivity.this, "unable to get current location", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        } catch (SecurityException e) {
+            Log.e(TAG, "getDeviceException: SecurityException: " + e.getMessage());
+        }
     }
 
     @Override
@@ -76,136 +195,29 @@ public class MapVoditelActivity extends FragmentActivity implements OnMapReadyCa
                 return;
             }
             mMap.setMyLocationEnabled(true);
-
-            mMap.getUiSettings().setMyLocationButtonEnabled(true);
-            mMap.getUiSettings().setZoomControlsEnabled(true);
-            mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
-                @Override
-                public void onMapLongClick(LatLng latLng) {
-                    //reset marker if already 2
-                    if (listPoints.size() == 2){
-                        listPoints.clear();
-                        mMap.clear();
-                    }
-
-                    //save first point select
-                    listPoints.add(latLng);
-                    //create marker
-                    MarkerOptions markerOptions = new MarkerOptions();
-                    markerOptions.position(latLng);
-
-                    if(listPoints.size() == 1){
-                        //Add first marker to the map
-                        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
-                    } else {
-                        //Add second marker to the map
-                        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
-                    }
-                    mMap.addMarker(markerOptions);
-
-                    if (listPoints.size() == 2){
-                        //Create the URL to get request from first marker to second marker
-                        String url = getRequestURL(listPoints.get(0), listPoints.get(1));
-                        TaskRequestDirections taskRequestDirections = new TaskRequestDirections();
-                        taskRequestDirections.execute(url);
-                    }
-                }
-            });
-
+            mMap.getUiSettings().setMyLocationButtonEnabled(false);
+            mMap.getUiSettings().setIndoorLevelPickerEnabled(true);
+            mMap.getUiSettings().setMapToolbarEnabled(true);
+            init();
         }
     }
 
-    private String getRequestURL(LatLng origin, LatLng destination) {
-        //value of origin
-        String str_orig = "origin=" + origin.latitude + ", " + origin.longitude;
-        //value of destination
-        String str_dest = "destination" + destination.latitude + ", " + destination.longitude;
-        //set value enable the sensor
-        String sensor = "sensor=false";
-        //Mode for find direction
-        String mode = "mode=driving";
-        //Build the full param
-        String param = str_orig + "&" + str_dest + "&" + sensor + "&" + mode;
-        //Output form
-        String output = "json";
-        //Create URL to request
-        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + param;
-        return url;
-    }
-
-    private String requestDirection(String reqUrl) throws IOException {
-        String responseString = "";
-        InputStream inputStream = null;
-        HttpURLConnection httpURLConnection = null;
-        try {
-
-            URL url = new URL(reqUrl);
-            httpURLConnection = (HttpURLConnection) url.openConnection();
-            httpURLConnection.connect();
-
-            //Get the response result
-            inputStream = httpURLConnection.getInputStream();
-            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-
-            StringBuffer stringBuffer = new StringBuffer();
-            String line = "";
-            while ( (line = bufferedReader.readLine()) != null ){
-                stringBuffer.append(line);
-            }
-
-            responseString = stringBuffer.toString();
-            bufferedReader.close();
-            inputStreamReader.close();
-
-        } catch (Exception e){
-
-            e.printStackTrace();
-        } finally {
-            if (inputStream != null){
-                inputStream.close();
-            }
-            httpURLConnection.disconnect();
-        }
-
-        return responseString;
-    }
-
-    private void getDeviceLocation() {
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-
-        try {
-            if (mLocationPermissionGranted) {
-
-                com.google.android.gms.tasks.Task location = mFusedLocationProviderClient.getLastLocation();
-                location.addOnCompleteListener(new OnCompleteListener() {
-                    @Override
-                    public void onComplete(@NonNull com.google.android.gms.tasks.Task task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "onComplete: found location!");
-                            Location currentLocation = (Location) task.getResult();
-
-                            moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
-                                    DEFAULT_ZOOM);
-
-                        } else {
-                            Log.d(TAG, "onComplete: current location is null");
-                            Toast.makeText(MapVoditelActivity.this, "unable to get current location", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-            }
-        } catch (SecurityException e) {
-            Log.e(TAG, "getDeviceException: SecurityException: " + e.getMessage());
-        }
-    }
-
-    public void moveCamera(LatLng latLng, float zoom) {
+    public void moveCamera(LatLng latLng, float zoom, String title) {
         Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+
+        if (!title.equals("My Location")){
+            MarkerOptions options = new MarkerOptions()
+                    .position(latLng)
+                    .title(title);
+            mMap.addMarker(options);
+        }
+
+        hideSoftKeyBoard();
     }
 
     private void initMap(){
+        Log.d(TAG, "initMap: started");
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
 
         mapFragment.getMapAsync(MapVoditelActivity.this);
@@ -214,6 +226,7 @@ public class MapVoditelActivity extends FragmentActivity implements OnMapReadyCa
     }
 
     private void getLocationPermission(){
+        Log.d(TAG, "getLocationPermission: ");
 
         String[] permissions = {
                 android.Manifest.permission.ACCESS_FINE_LOCATION,
@@ -259,80 +272,49 @@ public class MapVoditelActivity extends FragmentActivity implements OnMapReadyCa
                 }
             }
         }
+
     }
 
-    public class TaskRequestDirections extends AsyncTask<String, Void, String>{
-
-        @Override
-        protected String doInBackground(String... strings) {
-            String responseString = "";
-            try {
-                responseString = requestDirection(strings[0]);
-            } catch (Exception e){
-                e.printStackTrace();
-            }
-
-            return responseString;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            //Parse json here
-
-            TaskParser taskParser = new TaskParser();
-            taskParser.execute(s);
-        }
+    private void hideSoftKeyBoard(){
+        Log.d(TAG, "hideSoftKeyBoard: hide");
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(etSearchBar.getWindowToken(), 0);
     }
 
-    public class TaskParser extends AsyncTask<String, Void, List<List<HashMap<String, String>>>>{
+    /**
+     * Google API
+     */
 
+    private AdapterView.OnItemClickListener mAutocompleteClickListener = new AdapterView.OnItemClickListener() {
         @Override
-        protected List<List<HashMap<String, String>>> doInBackground(String... strings) {
-            JSONObject jsonObject = null;
-            List<List<HashMap<String, String>>> routes = null;
-            try {
-                jsonObject = new JSONObject(strings[0]);
-                DirectionsParcer directionsParcer = new DirectionsParcer();
-                routes = directionsParcer.parse(jsonObject);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            return routes;
-        }
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            hideSoftKeyBoard();
 
+            final AutocompletePrediction item = mPlaceAutocompleteAdapter.getItem(i);
+            final String placeId = item.getPlaceId();
+
+            PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
+                    .getPlaceById(mGoogleApiClient, placeId);
+            placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
+        }
+    };
+
+    private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback = new ResultCallback<PlaceBuffer>() {
         @Override
-        protected void onPostExecute(List<List<HashMap<String, String>>> lists) {
-            //Get list rout and display it into the map
-
-            ArrayList points = null;
-
-            PolylineOptions polylineOptions = null;
-
-            for (List<HashMap<String, String>> path : lists){
-                points = new ArrayList();
-                polylineOptions = new PolylineOptions();
-
-                for (HashMap<String, String> point : path){
-                    double lat = Double.parseDouble(point.get("lat"));
-                    double lon = Double.parseDouble(point.get("lon"));
-
-                    points.add(new LatLng(lat, lon));
-                }
-
-                polylineOptions.addAll(points);
-                polylineOptions.width(15);
-                polylineOptions.color(Color.BLUE);
-                polylineOptions.geodesic(true);
+        public void onResult(@NonNull PlaceBuffer places) {
+            if(!places.getStatus().isSuccess()){
+                Log.d(TAG, "onResult: plae query didn't comlete successfully" + places.getStatus().toString());
+                places.release();
+                return;
             }
+            final Place place = places.get(0);
 
-            if (polylineOptions != null){
-                mMap.addPolyline(polylineOptions);
-            } else {
-                Toast.makeText(MapVoditelActivity.this, "Direction not found!", Toast.LENGTH_SHORT).show();
-            }
+            Log.d(TAG, "onResult: place details" + place.getAttributions().toString());
+            Log.d(TAG, "onResult: place details" + place.getAddress().toString());
+            Log.d(TAG, "onResult: place details" + place.getLatLng().toString());
+            Log.d(TAG, "onResult: place details" + place.getName().toString());
+            Log.d(TAG, "onResult: place details" + place.getPhoneNumber().toString());
         }
-    }
-
-
+    };
 }
+

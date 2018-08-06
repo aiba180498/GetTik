@@ -1,10 +1,13 @@
 package example.sunny.functioncheck;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import java.util.ArrayList;
 
@@ -16,6 +19,7 @@ public class SuperviserActivity extends AppCompatActivity {
     //vars
     private ArrayList<String> mDates = new ArrayList<>();
     private ArrayList<String> mNomera = new ArrayList<>();
+    private Button createSuperviser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +29,16 @@ public class SuperviserActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate: started");
 
         initZayavki();
+
+        createSuperviser = (Button) findViewById(R.id.btnDobavitSuperviser);
+
+        createSuperviser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(SuperviserActivity.this, SuperviserItemActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void initZayavki(){

@@ -5,10 +5,20 @@
     android:layout_height="match_parent">
 
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_manager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/recycler_manager">
+        android:layout_height="519dp"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/btnDobavitManager">
 
     </android.support.v7.widget.RecyclerView>
+
+    <Button
+        android:id="@+id/btnDobavitManager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:text="Добавить запись" />
 
 </RelativeLayout>

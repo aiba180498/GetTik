@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,9 +21,15 @@ import com.google.android.gms.common.GoogleApiAvailability;
 public class VoditelItemActivity extends AppCompatActivity{
 
     private static final String TAG = "VoditelItemActivity";
+
+    //const
     private static final int ERROR_DIALOG_REQUEST = 9001;
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+
+    //vars
     private Button dostavleno;
-    static final int CAM_REQUEST = 1;
+    private ImageView mImageView;
+    private Bitmap mCameraBitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,19 +40,26 @@ public class VoditelItemActivity extends AppCompatActivity{
         Log.d(TAG, "onCreate: adasda");
 
         dostavleno = (Button) findViewById(R.id.btnGruzDostavlenVoditel);
-        dostavleno.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent camera_intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(camera_intent, CAM_REQUEST);
-            }
-        });
+        mImageView = (ImageView) findViewById(R.id.iwVoditel);
+
+        dostavleno.setOnClickListener(mCaptureImageButtonClickListener);
 
         if (isServicesOk()){
             init();
         }
 
         getIncomingIntent();
+    }
+
+    private View.OnClickListener mCaptureImageButtonClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            startImageCapture();
+        }
+    };
+
+    private void startImageCapture() {
+        startActivityForResult(new Intent(MediaStore.ACTION_IMAGE_CAPTURE), REQUEST_IMAGE_CAPTURE);
     }
 
     private void getIncomingIntent(){
@@ -71,10 +85,16 @@ public class VoditelItemActivity extends AppCompatActivity{
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == CAM_REQUEST && resultCode == RESULT_OK) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            if (mCameraBitmap != null) {
+                mCameraBitmap.recycle();
+                mCameraBitmap = null;
+            }
             Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            mCameraBitmap= (Bitmap) extras.get("data");
+            mImageView.setImageBitmap(mCameraBitmap);
         }
+
     }
 
 

@@ -5,15 +5,16 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-feature android:name="android.hardware.camera2" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-feature android:name="android.hardware.camera" android:required="true"/>
+    <uses-feature android:name="android.hardware.camera.autofocus"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="18"/>
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
+        android:icon="@drawable/icon"
+        android:screenOrientation="landscape"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -24,6 +25,16 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_API_key"/>
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.example.android.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"></meta-data>
+        </provider>
 
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -36,10 +47,10 @@
         <activity android:name=".SuperviserActivity" />
         <activity android:name=".VoditelActivity" />
         <activity android:name=".MenedzherActivity" />
-        <activity android:name=".MapVoditelActivity"></activity>
-        <activity android:name=".ManagerItemActivity" />
-        <activity android:name=".SuperviserItemActivity" />
-        <activity android:name=".VoditelItemActivity"/>
+        <activity android:name=".MapVoditelActivity"/>
+        <activity android:name=".ManagerItemActivity" android:configChanges="orientation"/>
+        <activity android:name=".SuperviserItemActivity" android:configChanges="orientation"/>
+        <activity android:name=".VoditelItemActivity" android:configChanges="orientation"/>
     </application>
 
 </manifest>

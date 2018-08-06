@@ -5,11 +5,14 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class ManagerItemActivity extends AppCompatActivity{
 
     private static final String TAG = "ManagerItemActivity";
+
+    private ImageView iwZayavka;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -17,6 +20,7 @@ public class ManagerItemActivity extends AppCompatActivity{
         setContentView(R.layout.activity_menedzher);
 
         getIncomingIntent();
+
     }
 
     private void getIncomingIntent(){

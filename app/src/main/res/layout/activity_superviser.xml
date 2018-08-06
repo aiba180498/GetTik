@@ -260,26 +260,6 @@ etNomer = (EditText) findViewById(R.id.field_nomer);
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="12dp">
-
-                <TextView
-                    android:id="@+id/txt_foto"
-                    android:layout_width="112dp"
-                    android:layout_height="wrap_content"
-                    android:text="Фото"
-                    android:textSize="20sp" />
-
-                <Button
-                    android:id="@+id/btnPhotoSuperviser"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Сделать фото" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
                 android:layout_height="300dp"
                 android:layout_margin="16dp"
                 android:gravity="center">
@@ -288,7 +268,8 @@ etNomer = (EditText) findViewById(R.id.field_nomer);
                     android:id="@+id/imageViewSuperviser"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="#6e6e6e" />
+                    android:background="#6e6e6e"
+                    android:src="@drawable/search"/>
             </LinearLayout>
 
             <Button
@@ -296,7 +277,8 @@ etNomer = (EditText) findViewById(R.id.field_nomer);
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_margin="8dp"
-                android:text="Отправить" />
+                android:text="Отправить"
+                android:textColor="#db5858"/>
 
         </LinearLayout>
     </ScrollView>
