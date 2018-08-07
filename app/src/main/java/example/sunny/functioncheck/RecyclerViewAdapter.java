@@ -36,6 +36,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         viewHolder.tvDate.setText(mZayavkas.get(i).getDate());
         viewHolder.tvNomer.setText(mZayavkas.get(i).getNomer());
+        //viewHolder.
         
         viewHolder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,7 +56,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
-        TextView tvDate, tvNomer;
+        TextView tvDate, tvNomer, tvZakazchik, tvContact;
         RelativeLayout parentLayout;
 
         public ViewHolder(@NonNull View itemView) {

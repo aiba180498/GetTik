@@ -22,7 +22,7 @@ import android.text.TextPaint;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-public class PrintShopPrintDocumentAdapter extends PrintDocumentAdapter {
+/*public class PrintShopPrintDocumentAdapter extends PrintDocumentAdapter {
 
     private ImageAndTextContainer imageAndTextContainer;
     private Context context;
@@ -168,4 +168,4 @@ public class PrintShopPrintDocumentAdapter extends PrintDocumentAdapter {
     private void drawImage(Bitmap image, Canvas canvas, Rect r) {
         canvas.drawBitmap(image, null, r, new Paint());
     }
-}
+}*/

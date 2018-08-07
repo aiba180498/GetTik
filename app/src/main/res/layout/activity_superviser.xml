@@ -1,40 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!--
-etNomer = (EditText) findViewById(R.id.field_nomer);
-        tvData = (TextView) findViewById(R.id.field_data);
-        etZakazchik = (EditText) findViewById(R.id.field_zakazchik);
-        etOtpravitel = (EditText) findViewById(R.id.field_otpravitel);
-        etPoluchatel = (EditText) findViewById(R.id.field_poluchatel);
-        etKolichestvo = (EditText) findViewById(R.id.field_kolichestvo_fact);
-        etVes = (EditText) findViewById(R.id.field_ves_fact);
-        etVolume = (EditText) findViewById(R.id.field_volume);
-        cbPovrezhden = (CheckBox) findViewById(R.id.txt_povrezhden);
-        btnCamera = (Button) findViewById(R.id.btnPhotoSuperviser);
-        btnSend = (Button) findViewById(R.id.btnSuperviserSend);
-
-        isStringFilled(etNomer);
-        isStringFilled(etOtpravitel);
-        isStringFilled(etPoluchatel);
-        isStringFilled(etZakazchik);
-        isStringFilled(etKolichestvo);
-        isStringFilled(etVes);
-        isStringFilled(etVolume);
-
-        public boolean isStringFilled(EditText editText){
-
-        String string = editText.getText().toString();
-
-        if(TextUtils.isEmpty(string)) {
-            editText.setError("Пожалуйста, заполните это поле");
-            return false;
-        } else {
-            return true;
-        }
-    }
-
--->
-
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -64,7 +29,7 @@ etNomer = (EditText) findViewById(R.id.field_nomer);
                     android:text="Номер"
                     android:textSize="20sp" />
 
-                <EditText
+                <TextView
                     android:id="@+id/field_nomer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -100,15 +65,36 @@ etNomer = (EditText) findViewById(R.id.field_nomer);
                 android:layout_margin="12dp">
 
                 <TextView
+                    android:id="@+id/txt_namegruz"
+                    android:layout_width="112dp"
+                    android:layout_height="wrap_content"
+                    android:text="Наименование груза"
+                    android:textSize="20sp" />
+
+                <EditText
+                    android:id="@+id/field_namegruz"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Введите груз"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp">
+
+                <TextView
                     android:id="@+id/txt_zakazchik"
                     android:layout_width="112dp"
                     android:layout_height="wrap_content"
                     android:text="Заказчик"
                     android:textSize="20sp" />
 
-                <EditText
+                <Spinner
                     android:id="@+id/field_zakazchik"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:hint="Введите заказчика"
@@ -127,9 +113,9 @@ etNomer = (EditText) findViewById(R.id.field_nomer);
                     android:text="Отправитель"
                     android:textSize="20sp" />
 
-                <EditText
+                <Spinner
                     android:id="@+id/field_otpravitel"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:hint="Введите отправителя"
@@ -148,9 +134,9 @@ etNomer = (EditText) findViewById(R.id.field_nomer);
                     android:text="Получатель"
                     android:textSize="20sp" />
 
-                <EditText
+                <Spinner
                     android:id="@+id/field_poluchatel"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:hint="Введите получателя"
@@ -235,9 +221,9 @@ etNomer = (EditText) findViewById(R.id.field_nomer);
                     android:text="Упаковка"
                     android:textSize="16sp" />
 
-                <EditText
+                <Spinner
                     android:id="@+id/field_upakovka"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:textSize="16sp"
@@ -277,8 +263,17 @@ etNomer = (EditText) findViewById(R.id.field_nomer);
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_margin="8dp"
-                android:text="Отправить"
+                android:text="Печать этикетки"
                 android:textColor="#db5858"/>
+
+            <Button
+                android:id="@+id/btnSuperviserSave"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_margin="8dp"
+                android:text="Сохранить"
+                android:textColor="#db5858"/>
+
 
         </LinearLayout>
     </ScrollView>

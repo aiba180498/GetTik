@@ -10,10 +10,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 
 public class MenedzherActivity extends AppCompatActivity {
@@ -23,6 +31,8 @@ public class MenedzherActivity extends AppCompatActivity {
     //vars
     private ArrayList<Zayavka> mZayavkas = new ArrayList<>();
     private Button createManager;
+    private FirebaseAuth firebaseAuth;
+    private StringBuilder jsonStringBuilder = new StringBuilder();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,8 +41,56 @@ public class MenedzherActivity extends AppCompatActivity {
 
         Log.d(TAG, "onCreate: started");
 
-        initZayavki();
+        firebaseAuth = FirebaseAuth.getInstance();
+        if (firebaseAuth.getCurrentUser() == null){
+            finish();
+            startActivity(new Intent(MenedzherActivity.this, MainActivity.class));
+        }
 
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    String urlString = "http://127.0.0.1:8000/api/Blog/?format=json";
+                    Log.d(TAG, "1");
+                    URL url = new URL(urlString);
+                    URLConnection con = url.openConnection();
+                    InputStream is =con.getInputStream();
+                    Log.d(TAG, "2");
+                    BufferedReader br = new BufferedReader(new InputStreamReader(is));
+                    String line = null;
+                    Log.d(TAG, "3");
+                    while ((line = br.readLine()) != null) {
+                        jsonStringBuilder.append(line);
+                    }
+                    Log.d(TAG, "run: " + jsonStringBuilder.toString());
+                } catch (IOException e) {
+                    Log.e(TAG, e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+        jsonArrayBuilder();
+        initRecyclerView();
+        createMenedzher();
+    }
+
+    private void jsonArrayBuilder(){
+        try {
+            String json = jsonStringBuilder.toString();
+            JSONObject jsonObject = new JSONObject(json);
+            JSONArray jsonArray = jsonObject.getJSONArray("zayavki");
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonItem = (JSONObject) jsonArray.get(i);
+                mZayavkas.add(new Zayavka(jsonItem.getString("date"), jsonItem.getString("nomer")));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void createMenedzher(){
         createManager = (Button) findViewById(R.id.btnDobavitManager);
 
         createManager.setOnClickListener(new View.OnClickListener() {
@@ -44,27 +102,6 @@ public class MenedzherActivity extends AppCompatActivity {
         });
     }
 
-    private void initZayavki() {
-
-
-        /*String json = "{\"zayavki\":[" +
-                "{\"date\": \"31.01.18\", \"nomer\": \"1\"}," +
-                "{\"date\": \"31.02.18\", \"nomer\": \"2\"}," +
-                "{\"date\": \"31.03.18\", \"nomer\": \"3\"}]}";
-        try {
-            JSONObject jsonObject = new JSONObject(json);
-            JSONArray jsonArray = jsonObject.getJSONArray("zayavki");
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject jsonItem = (JSONObject) jsonArray.get(i);
-                mZayavkas.add(new Zayavka(jsonItem.getString("date"), jsonItem.getString("nomer")));
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }*/
-
-        initRecyclerView();
-    }
-
     private void initRecyclerView() {
         Log.d(TAG, "initRecyclerView: started");
         RecyclerView recyclerView = findViewById(R.id.recycler_manager);
@@ -72,9 +109,7 @@ public class MenedzherActivity extends AppCompatActivity {
         mAdapter.setCallback(new RecyclerViewAdapter.Callback() {
             @Override
             public void onClickItem(int position) {
-                Toast.makeText(MenedzherActivity.this, mZayavkas.get(position).toString(), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(MenedzherActivity.this, ManagerItemActivity.class);
-                intent.putExtra("data", mZayavkas.get(position));
                 startActivity(intent);
             }
         });

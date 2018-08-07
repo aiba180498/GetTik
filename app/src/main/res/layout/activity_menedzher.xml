@@ -142,12 +142,22 @@ public void sohranitDannye(){
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="12dp">
+                android:layout_margin="12dp"
+                android:layout_weight="100">
 
                 <TextView
                     android:id="@+id/txt_ves_fact"
-                    android:layout_width="112dp"
+                    android:layout_width="82dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="40"
+                    android:text="Вес"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/txt_ves_plan"
+                    android:layout_width="86dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="30"
                     android:text="Вес"
                     android:textSize="16sp" />
 
@@ -155,32 +165,42 @@ public void sohranitDannye(){
                     android:id="@+id/field_ves_fact"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:inputType="number"
                     android:textSize="16sp"
-                    android:hint="Введите вес"/>
+                    android:hint="Введите вес"
+                    android:layout_weight="30"/>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="12dp">
+                android:layout_margin="12dp"
+                android:layout_weight="100">
 
                 <TextView
                     android:id="@+id/txt_volume"
                     android:layout_width="112dp"
                     android:layout_height="wrap_content"
                     android:text="Объем"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:layout_weight="40"/>
+
+                <TextView
+                    android:id="@+id/txt_planvolume"
+                    android:layout_width="112dp"
+                    android:layout_height="wrap_content"
+                    android:text="Объем"
+                    android:textSize="16sp"
+                    android:layout_weight="30"/>
 
                 <EditText
                     android:id="@+id/field_volume"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:inputType="number"
                     android:textSize="16sp"
-                    android:hint="Введите объем"/>
+                    android:hint="Введите объем"
+                    android:layout_weight="30"/>
             </LinearLayout>
 
             <LinearLayout

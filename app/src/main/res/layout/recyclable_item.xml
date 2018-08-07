@@ -1,31 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="52dp"
     android:padding="8dp"
     android:id="@+id/recycle_relative_layout">
 
+    <ImageView
+        android:id="@+id/recycle_icon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true" />
+
 
     <TextView
-        android:layout_width="116dp"
-        android:layout_height="wrap_content"
         android:id="@+id/recycle_data"
-        android:textSize="16sp"
+        android:layout_width="77dp"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/recycle_icon"
+        android:paddingStart="8dp"
         android:text="date"
         android:textColor="#000"
-        android:layout_centerVertical="true"
-        android:paddingStart="8dp"
-        />
+        android:textSize="16sp" />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/recycle_nomer"
+        android:layout_width="62dp"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
         android:layout_toEndOf="@+id/recycle_data"
-        android:textSize="16sp"
         android:text="nomer"
         android:textColor="#000"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/recycle_zakazchik"
+        android:layout_width="122dp"
+        android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginStart="4dp"/>
+        android:layout_toEndOf="@+id/recycle_nomer"
+        android:text="zakazchik"
+        android:textColor="#000"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/recycle_contacts"
+        android:layout_width="75dp"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/recycle_zakazchik"
+        android:text="telephon"
+        android:textColor="#000"
+        android:textSize="16sp" />
 
 </RelativeLayout>

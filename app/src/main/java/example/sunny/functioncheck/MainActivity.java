@@ -1,37 +1,28 @@
 package example.sunny.functioncheck;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
 
-    private SharedPreferences mPreferences;
-    private SharedPreferences.Editor mEditor;
-
     private EditText mEmail, mPassword;
     private Button btnLogin;
-    private DatabaseReference myRef;
-
+    private FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,29 +35,59 @@ public class MainActivity extends AppCompatActivity {
         mPassword = (EditText) findViewById(R.id.field_password);
         btnLogin = (Button) findViewById(R.id.btn_enter);
 
-        myRef = FirebaseDatabase.getInstance().getReference();
+        firebaseAuth = FirebaseAuth.getInstance();
+        if (firebaseAuth.getCurrentUser() != null){
+            Log.d(TAG, "onCreate: user not null");
+        }
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                final String name = mEmail.getText().toString().trim();
-                String password = mPassword.getText().toString().trim();
-
-                HashMap<String, String> mMap = new HashMap<String, String>();
-                mMap.put("Name", name);
-                mMap.put("Password", password);
-
-                myRef.push().setValue(mMap).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Intent intent = new Intent(MainActivity.this, Menu.class);
-                        startActivity(intent);
-
-                    }
-                });
+                Log.d(TAG, "onClick: login");
+                loginUser();
             }
         });
 
+    }
+
+    private void loginUser(){
+        Log.d(TAG, "loginUser: login");
+        final String name = mEmail.getText().toString();
+        String password = mPassword.getText().toString();
+
+        if(TextUtils.isEmpty(name)){
+            Toast.makeText(this, "Enter name", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if(TextUtils.isEmpty(password)){
+            Toast.makeText(this, "Enter password", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        firebaseAuth.signInWithEmailAndPassword(name, password)
+        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()){
+                    Log.d(TAG, "loginUser: entered");
+
+                    if (name.equals("test@gmail.com")){
+                        finish();
+                        startActivity(new Intent(MainActivity.this, SuperviserActivity.class));
+                    }
+                    if (name.equals("voditel@gmail.com")){
+                        finish();
+                        startActivity(new Intent(MainActivity.this, VoditelActivity.class));
+                    }
+                    if (name.equals("manager@gmail.com")){
+                        finish();
+                        startActivity(new Intent(MainActivity.this, MenedzherActivity.class));
+                    }
+
+                    Toast.makeText(MainActivity.this, "Вы успешно вошли", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 }

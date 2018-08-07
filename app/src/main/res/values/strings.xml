@@ -4,4 +4,24 @@
     <string name="email">example.sunny.functioncheck.email</string>
     <string name="password">example.sunny.functioncheck.password</string>
     <string name="google_maps_API_key">AIzaSyDdWEzGhJWCyv6VJjw4WO20DcNGWcm90uQ</string>
+    <string-array name="zakazchik">
+        <item>ИП Яблоко</item>
+        <item>ТОО Груша</item>
+        <item>ИП Виноград</item>
+    </string-array>
+    <string-array name="otpravitel">
+        <item>ИП Апельсин</item>
+        <item>ТОО Банан</item>
+        <item>ИП Ананас</item>
+    </string-array>
+    <string-array name="poluchatel">
+        <item>ИП Арбуз</item>
+        <item>ТОО Дыня</item>
+        <item>ИП Вишня</item>
+    </string-array>
+    <string-array name="upakovka">
+        <item>Пакет</item>
+        <item>Коробка</item>
+        <item>Ящик</item>
+    </string-array>
 </resources>
