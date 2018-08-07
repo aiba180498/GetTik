@@ -10,6 +10,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
+
+import java.io.IOException;
+
 import com.google.firebase.auth.FirebaseAuth;
 
 import org.json.JSONArray;
@@ -47,29 +54,58 @@ public class MenedzherActivity extends AppCompatActivity {
             startActivity(new Intent(MenedzherActivity.this, MainActivity.class));
         }
 
-        new Thread(new Runnable() {
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    String urlString = "http://192.168.43.155:8000/api/Blog/?format=json";
+//                    Log.d(TAG, "1");
+//                    URL url = new URL(urlString);
+//                    URLConnection con = url.openConnection();
+//                    InputStream is =con.getInputStream();
+//                    Log.d(TAG, "2");
+//                    BufferedReader br = new BufferedReader(new InputStreamReader(is));
+//                    String line = null;
+//                    Log.d(TAG, "3");
+//                    while ((line = br.readLine()) != null) {
+//                        jsonStringBuilder.append(line);
+//                    }
+//                    Log.d(TAG, "run: " + jsonStringBuilder.toString());
+//                } catch (IOException e) {
+//                    Log.e(TAG, e.getMessage());
+//                    e.printStackTrace();
+//                }
+//            }
+//        }).start();
+
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder()
+                .url("http://192.168.43.155:8000/api/Blog/")
+                .get()
+                .addHeader("Cache-Control", "no-cache")
+                .addHeader("Postman-Token", "f04a3d72-0496-465e-8db1-4ec282370f2e")
+                .build();
+
+        Log.d(TAG, "onCreate: request is built");
+
+        client.newCall(request).enqueue(new Callback(){
             @Override
-            public void run() {
-                try {
-                    String urlString = "http://127.0.0.1:8000/api/Blog/?format=json";
-                    Log.d(TAG, "1");
-                    URL url = new URL(urlString);
-                    URLConnection con = url.openConnection();
-                    InputStream is =con.getInputStream();
-                    Log.d(TAG, "2");
-                    BufferedReader br = new BufferedReader(new InputStreamReader(is));
-                    String line = null;
-                    Log.d(TAG, "3");
-                    while ((line = br.readLine()) != null) {
-                        jsonStringBuilder.append(line);
-                    }
-                    Log.d(TAG, "run: " + jsonStringBuilder.toString());
-                } catch (IOException e) {
-                    Log.e(TAG, e.getMessage());
-                    e.printStackTrace();
+            public void onFailure(Request request, IOException e) {
+                Log.d("HTTPRequestTest", "Shit happened");
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                if(!response.isSuccessful()){
+                    throw new IOException("Blablabla" + response);
+                }else{
+                    Log.d("HTTPRequestTest", "Request has been completed successfully");
+                    Log.d("HTTPRequestTest", response.body().string());
                 }
             }
-        }).start();
+        });
 
         jsonArrayBuilder();
         initRecyclerView();

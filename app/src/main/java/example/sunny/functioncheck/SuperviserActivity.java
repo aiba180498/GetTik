@@ -23,8 +23,7 @@ public class SuperviserActivity extends AppCompatActivity {
     private static final String TAG = "SuperviserActivity";
 
     //vars
-    private ArrayList<String> mDates = new ArrayList<>();
-    private ArrayList<String> mNomera = new ArrayList<>();
+    private ArrayList<Zayavka> mDates = new ArrayList<>();
     private Button createSuperviser;
 
     @Override
@@ -50,8 +49,7 @@ public class SuperviserActivity extends AppCompatActivity {
     private void initZayavki(){
 
         for (int i = 0; i < 20; i++){
-            mDates.add((i + 4)+ ".12.18");
-            mNomera.add("N" + (i + 1));
+            //mNomera.add("N" + (i + 1));
         }
 
         initRecyclerView();
@@ -60,9 +58,9 @@ public class SuperviserActivity extends AppCompatActivity {
     private void initRecyclerView(){
         Log.d(TAG, "initRecyclerView: started");
         RecyclerView recyclerView = findViewById(R.id.recycler_superviser);
-        SuperviserRecyclerAdapter mAdapter = new SuperviserRecyclerAdapter(SuperviserActivity.this, mDates, mNomera);
-        recyclerView.setAdapter(mAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+//        SuperviserRecyclerAdapter mAdapter = new SuperviserRecyclerAdapter(SuperviserActivity.this, mDates, mNomera);
+//        recyclerView.setAdapter(mAdapter);
+//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
 
