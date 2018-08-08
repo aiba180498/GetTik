@@ -1,42 +1,34 @@
 package example.sunny.functioncheck;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
-import java.io.IOException;
-
-import com.google.firebase.auth.FirebaseAuth;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MenedzherActivity extends AppCompatActivity {
 
     private static final String TAG = "MenedzherActivity";
 
     //vars
-    private ArrayList<Zayavka> mZayavkas = new ArrayList<>();
+    private List<Zayavka> mZayavkas;
     private Button createManager;
     private FirebaseAuth firebaseAuth;
     private StringBuilder jsonStringBuilder = new StringBuilder();
@@ -113,17 +105,26 @@ public class MenedzherActivity extends AppCompatActivity {
     }
 
     private void jsonArrayBuilder(){
-        try {
-            String json = jsonStringBuilder.toString();
-            JSONObject jsonObject = new JSONObject(json);
-            JSONArray jsonArray = jsonObject.getJSONArray("zayavki");
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject jsonItem = (JSONObject) jsonArray.get(i);
-                mZayavkas.add(new Zayavka(jsonItem.getString("date"), jsonItem.getString("nomer")));
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        mZayavkas = new ArrayList<>();
+        mZayavkas.add(new Zayavka("J", "df"));
+        mZayavkas.add(new Zayavka("sfds", "fsd"));
+
+//        try {
+//            //String json = jsonStringBuilder.toString();
+//
+//             String json = "{\"zayavki\":\"{\"date\": \"31.01.18\", \"nomer\": \"1\"}," +
+//                        "{\"date\": \"31.02.18\", \"nomer\": \"2\"}," +
+//                     "{\"date\": \"31.03.18\", \"nomer\": \"3\"}]}";
+//
+//            JSONObject jsonObject = new JSONObject(json);
+//            JSONArray jsonArray = jsonObject.getJSONArray("zayavki");
+//            for (int i = 0; i < jsonArray.length(); i++) {
+//                JSONObject jsonItem = (JSONObject) jsonArray.get(i);
+//                mZayavkas.add(new Zayavka(jsonItem.getString("date"), jsonItem.getString("nomer")));
+//            }
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
     }
 
     private void createMenedzher(){
@@ -152,6 +153,5 @@ public class MenedzherActivity extends AppCompatActivity {
         recyclerView.setAdapter(mAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
-
 
 }

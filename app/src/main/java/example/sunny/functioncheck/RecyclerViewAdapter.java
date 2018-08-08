@@ -10,15 +10,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>{
 
-    private static final String TAG = "RecyclerViewAdapter";
+    private static final String TAG = "Adapter for Manager";
 
-    private ArrayList<Zayavka> mZayavkas;
+    private List<Zayavka> mZayavkas;
     private Callback mCallback;
 
-    public RecyclerViewAdapter(ArrayList<Zayavka> zayavkas) {
+    public RecyclerViewAdapter(List<Zayavka> zayavkas) {
         this.mZayavkas = zayavkas;
     }
 
@@ -52,7 +53,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public int getItemCount() {
         return mZayavkas.size();
     }
-
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 

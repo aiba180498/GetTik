@@ -1,7 +1,5 @@
 package example.sunny.functioncheck;
 
-import android.content.Context;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -10,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -18,14 +15,11 @@ public class SuperviserRecyclerAdapter extends RecyclerView.Adapter<SuperviserRe
 
     private static final String TAG = "SupervRecyclerAdapt";
 
-    private ArrayList<String> mDates = new ArrayList<>();
-    private ArrayList<String> mNomera = new ArrayList<>();
-    private Context mContext;
+    private ArrayList<Zayavka> mZayavkas;
+    private Callback mCallback;
 
-    public SuperviserRecyclerAdapter (Context mContext, ArrayList<String> mDates, ArrayList<String> mNomera) {
-        this.mDates = mDates;
-        this.mNomera = mNomera;
-        this.mContext = mContext;
+    public SuperviserRecyclerAdapter (ArrayList<Zayavka> zayavkas) {
+        this.mZayavkas = zayavkas;
     }
 
 
@@ -41,30 +35,36 @@ public class SuperviserRecyclerAdapter extends RecyclerView.Adapter<SuperviserRe
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int i) {
         Log.d(TAG, "onBindViewHolder: called");
 
-        viewHolder.tvDate.setText(mDates.get(i));
-        viewHolder.tvNomer.setText(mNomera.get(i));
+        viewHolder.tvDate.setText(mZayavkas.get(i).getDate());
+        viewHolder.tvNomer.setText(mZayavkas.get(i).getNomer());
 
-        viewHolder.parentLayout.setOnClickListener(new View.OnClickListener() {
+        viewHolder.tvZakazchik.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(mContext, mDates.get(i), Toast.LENGTH_SHORT).show();
+                if (mCallback != null) {
+                    mCallback.onClickItem(i);
+                }
+            }
+        });
 
-                Intent intent = new Intent(mContext, SuperviserItemActivity.class);
-                intent.putExtra("nom", mNomera.get(i));
-                intent.putExtra("dat", mDates.get(i));
-                mContext.startActivity(intent);
+        viewHolder.tvContact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mCallback != null) {
+                    mCallback.onClickItem(i);
+                }
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return mNomera.size();
+       return mZayavkas.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
-        TextView tvDate, tvNomer;
+        TextView tvDate, tvNomer, tvZakazchik, tvContact;
         RelativeLayout parentLayout;
 
         public ViewHolder(@NonNull View itemView) {
@@ -72,8 +72,18 @@ public class SuperviserRecyclerAdapter extends RecyclerView.Adapter<SuperviserRe
 
             tvDate = itemView.findViewById(R.id.recycle_data);
             tvNomer = itemView.findViewById(R.id.recycle_nomer);
+            tvContact = itemView.findViewById(R.id.recycle_contacts);
+            tvZakazchik = itemView.findViewById(R.id.recycle_zakazchik);
             parentLayout = itemView.findViewById(R.id.recycle_relative_layout);
         }
 
+    }
+
+    public void setCallback(Callback mCallback) {
+        this.mCallback = mCallback;
+    }
+
+    public interface Callback {
+        void onClickItem(int position);
     }
 }

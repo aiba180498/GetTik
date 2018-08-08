@@ -22,7 +22,7 @@ import android.text.TextPaint;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-/*public class PrintShopPrintDocumentAdapter extends PrintDocumentAdapter {
+public class PrintShopPrintDocumentAdapter extends PrintDocumentAdapter {
 
     private ImageAndTextContainer imageAndTextContainer;
     private Context context;
@@ -46,12 +46,12 @@ import java.io.IOException;
         });
 
         // Prepare the layout.
-        int newPageCount;
-        if(newAttributes.getMediaSize().getHeightMils() < 1000) {
+        int newPageCount = 2;
+        /*if(newAttributes.getMediaSize().getHeightMils() < 1000) {
             newPageCount = 2;
         } else {
             newPageCount = 1;
-        }
+        }*/
 
         // Create the PDF document we'll use later
         pdfDocument = new PrintedPdfDocument(context, newAttributes);
@@ -168,4 +168,4 @@ import java.io.IOException;
     private void drawImage(Bitmap image, Canvas canvas, Rect r) {
         canvas.drawBitmap(image, null, r, new Paint());
     }
-}*/
+}

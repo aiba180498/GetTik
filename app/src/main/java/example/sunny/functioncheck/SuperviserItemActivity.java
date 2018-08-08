@@ -1,22 +1,21 @@
 package example.sunny.functioncheck;
 
+import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.print.PrintManager;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.print.PrintHelper;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -25,12 +24,19 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
-import java.io.BufferedReader;
+import java.util.Properties;
 
-public class SuperviserItemActivity extends AppCompatActivity{
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+
+public class SuperviserItemActivity extends AppCompatActivity implements ImageAndTextContainer{
 
     private static final String TAG = "SuperviserItemActivity";
 
@@ -39,19 +45,20 @@ public class SuperviserItemActivity extends AppCompatActivity{
     private ImageView mImageView;
     private Bitmap mCameraBitmap;
     private Spinner etZakazchik, etOtpravitel, etPoluchatel, etUpakovka;
-    private EditText etKolichestvo, etVes, etVolume;
+    private EditText etKolichestvo, etVes, etVolume, etEmail;
     private TextView etNomer, tvData;
-    private CheckBox cbPovrezhden;
+    private Button cbPovrezhden;
     private FirebaseAuth firebaseAuth;
-
-    private DatabaseReference reference;
+    private String reciepeint, subject, messageText;
+    private Session session = null;
+    private ProgressDialog dialog = null;
+    private Context context = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_superviser);
 
-        reference = FirebaseDatabase.getInstance().getReference();
         firebaseAuth = FirebaseAuth.getInstance();
 
         //getIncomingIntent();
@@ -68,7 +75,8 @@ public class SuperviserItemActivity extends AppCompatActivity{
         etKolichestvo = (EditText) findViewById(R.id.field_kolichestvo_fact);
         etVes = (EditText) findViewById(R.id.field_ves_fact);
         etVolume = (EditText) findViewById(R.id.field_volume);
-        cbPovrezhden = (CheckBox) findViewById(R.id.txt_povrezhden);
+//        etEmail = findViewById(R.id.field_email);
+        cbPovrezhden = (Button) findViewById(R.id.txt_povrezhden);
 
         isStringFilled(etKolichestvo);
         isStringFilled(etVes);
@@ -106,53 +114,108 @@ public class SuperviserItemActivity extends AppCompatActivity{
         uAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         etUpakovka.setAdapter(uAdapter);
 
+        final ImageAndTextContainer imageAndTextContainer = this;
+
         btnPrint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PrintHelper photoPrinter = new PrintHelper(SuperviserItemActivity.this);
-                photoPrinter.setScaleMode(PrintHelper.SCALE_MODE_FIT);
-                Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
-                        R.drawable.etc);
-                photoPrinter.printBitmap("test print", bitmap);
+//                PrintHelper photoPrinter = new PrintHelper(SuperviserItemActivity.this);
+//                photoPrinter.setScaleMode(PrintHelper.SCALE_MODE_FIT);
+//                Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
+//                        R.drawable.etc);
+//                photoPrinter.printBitmap("test print", bitmap);
 
                 // Create a PrintDocumentAdapter
-                /*PrintShopPrintDocumentAdapter adapter = new PrintShopPrintDocumentAdapter(imageAndTextContainer, SuperviserItemActivity.this);
+                PrintShopPrintDocumentAdapter adapter = new PrintShopPrintDocumentAdapter(imageAndTextContainer, SuperviserItemActivity.this);
                 // Get the print manager from the context
                 PrintManager printManager = (PrintManager)SuperviserItemActivity.this.getSystemService(Context.PRINT_SERVICE);
                 // And print the document
-                printManager.print("PrintShop", adapter, null);*/
+                printManager.print("PrintShop", adapter, null);
             }
         });
 
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveInfo();
+                //save data
             }
         });
+
+        sendMessage();
     }
 
-    public void saveInfo(){
-        String nomer = "2".trim();
-        String data = "11.05.18".trim();
-        String name = "gruz".trim();
-        String zakaz = etZakazchik.getBaseline()+"".trim();
-        String otprav = etOtpravitel.getBaseline() +"".trim();
-        String poluch = etPoluchatel.getBaseline()+"".trim();
-        String upakovka = etUpakovka.getBaseline()+"".trim();
-        int kolvo = (int) etKolichestvo.getText().length();
-        int ves = etVes.getText().length();
-        int obem = etVolume.getText().length();
-        String povrezh = "Да";
+    public void sendMessage(){
+        context = this;
 
-        Zayavka newZayavka = new Zayavka(nomer, data);
+        cbPovrezhden.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                reciepeint = etEmail.getText().toString();
+                subject = "GLOTUS_Ваш Груз Поврежден";
+                messageText = "Ваш груз поврежден";
 
-        FirebaseUser user = firebaseAuth.getCurrentUser();
+                Properties properties = new Properties();
+                properties.put("mail.smtp.host", "smtp.gmail.com");
+                properties.put("mail.smtp.socketFactory.port", "465");
+                properties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+                properties.put("mail.smtp.auth", "true");
+                properties.put("mail.smtp.port", "465");
 
-        reference.child(user.getUid()).setValue(newZayavka);
+                session = Session.getDefaultInstance(properties, new Authenticator() {
+                    @Override
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication("saadatsunnysmile@gmail.com", "GGGg5555");
+                    }
+                });
 
-        Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
+                dialog = ProgressDialog.show(context, "", "Sending message...", true);
 
+                RetreiveFeedTask task = new RetreiveFeedTask();
+                task.execute();
+            }
+        } );
+
+    }
+
+    @Override
+    public String getText() {
+        EditText textView = (EditText) findViewById(R.id.field_email);
+        return textView.getText().toString();
+    }
+
+    @Override
+    public Bitmap getImage() {
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.etc);
+        return bitmap;
+    }
+
+    public class RetreiveFeedTask extends AsyncTask<String,Void,String> {
+
+        @Override
+        protected String  doInBackground(String... strings) {
+            try{
+
+                Message message = new MimeMessage(session);
+                message.setFrom(new InternetAddress("saadatsunnysmile@gmail.com"));
+                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(reciepeint));
+                message.setSubject(subject);
+                message.setContent(messageText, "text/html; charset=utf-8");
+
+                Transport.send(message);
+
+            } catch (MessagingException e){
+                e.printStackTrace();
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String aVoid) {
+            dialog.dismiss();
+            Toast.makeText(context, "Message sent", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public boolean isStringFilled(EditText editText){

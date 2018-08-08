@@ -1,23 +1,21 @@
 package example.sunny.functioncheck;
 
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.Spinner;
-import android.widget.TextView;
-
-import java.io.Serializable;
-
 public class Zayavka //implements Serializable
 {
-    private String date, nomer, zakazchik, otpravitel, poluchatel, upakovka, povrezhden;
+    private String date, nomer, zakazchik, otpravitel, poluchatel, upakovka, povrezhden, telephon;
     private int ves, volume, kolichestvo;
+
+    public String getTelephon() {
+        return telephon;
+    }
+
+    public void setTelephon(String telephon) {
+        this.telephon = telephon;
+    }
 
     public Zayavka(String data, String nomer) {
         this.date = data;
         this.nomer = nomer;
-
-
     }
 
     public String getDate() {

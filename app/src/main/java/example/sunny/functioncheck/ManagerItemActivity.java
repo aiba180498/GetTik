@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.apache.http.HttpResponse;
@@ -34,7 +33,6 @@ public class ManagerItemActivity extends AppCompatActivity{
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menedzher);
-
         setZayavka();
 
         btnSend = (Button) findViewById(R.id.btnMenedzherPodtverdit);
@@ -44,9 +42,7 @@ public class ManagerItemActivity extends AppCompatActivity{
                 saveZayavka();
             }
         });
-
     }
-
 
     private void setZayavka(){
         Log.d(TAG, "setZayavka: setting fields");

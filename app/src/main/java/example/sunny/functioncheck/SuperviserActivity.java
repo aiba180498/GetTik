@@ -5,26 +5,23 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.TextView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
-
 
 public class SuperviserActivity extends AppCompatActivity {
 
     private static final String TAG = "SuperviserActivity";
 
     //vars
-    private ArrayList<Zayavka> mDates = new ArrayList<>();
-    private Button createSuperviser;
+    private ArrayList<Zayavka> mZayavkas = new ArrayList<>();
+    private Button create;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,11 +30,15 @@ public class SuperviserActivity extends AppCompatActivity {
 
         Log.d(TAG, "onCreate: started");
 
-        initZayavki();
+        jsonArrayBuilder();
+        initRecyclerView();
+        createSuperviser();
+    }
 
-        createSuperviser = (Button) findViewById(R.id.btnDobavitSuperviser);
+    private void createSuperviser(){
+        create = (Button) findViewById(R.id.btnDobavitSuperviser);
 
-        createSuperviser.setOnClickListener(new View.OnClickListener() {
+        create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(SuperviserActivity.this, SuperviserItemActivity.class);
@@ -46,21 +47,41 @@ public class SuperviserActivity extends AppCompatActivity {
         });
     }
 
-    private void initZayavki(){
+    private void jsonArrayBuilder(){
+        try {
+            //String json = jsonStringBuilder.toString();
 
-        for (int i = 0; i < 20; i++){
-            //mNomera.add("N" + (i + 1));
+            Log.d(TAG, "jsonArrayBuilder: started");
+
+            String json = "{\"zayavki\":\"{\"date\": \"31.01.18\", \"nomer\": \"1\"}," +
+                    "{\"date\": \"31.02.18\", \"nomer\": \"2\"}," +
+                    "{\"date\": \"31.03.18\", \"nomer\": \"3\"}]}";
+
+            JSONObject jsonObject = new JSONObject(json);
+            JSONArray jsonArray = jsonObject.getJSONArray("zayavki");
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonItem = (JSONObject) jsonArray.get(i);
+                mZayavkas.add(new Zayavka(jsonItem.getString("date"), jsonItem.getString("nomer")));
+                Log.d(TAG, "jsonArrayBuilder: " + mZayavkas.get(i).toString());
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-
-        initRecyclerView();
     }
 
     private void initRecyclerView(){
         Log.d(TAG, "initRecyclerView: started");
         RecyclerView recyclerView = findViewById(R.id.recycler_superviser);
-//        SuperviserRecyclerAdapter mAdapter = new SuperviserRecyclerAdapter(SuperviserActivity.this, mDates, mNomera);
-//        recyclerView.setAdapter(mAdapter);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        SuperviserRecyclerAdapter mAdapter = new SuperviserRecyclerAdapter(mZayavkas);
+        mAdapter.setCallback(new SuperviserRecyclerAdapter.Callback() {
+            @Override
+            public void onClickItem(int position) {
+                Intent intent = new Intent(SuperviserActivity.this, SuperviserItemActivity.class);
+                startActivity(intent);
+            }
+        });
+        recyclerView.setAdapter(mAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
 
