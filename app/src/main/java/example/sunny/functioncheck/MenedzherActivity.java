@@ -70,34 +70,38 @@ public class MenedzherActivity extends AppCompatActivity {
 //            }
 //        }).start();
 
-        OkHttpClient client = new OkHttpClient();
-
-        Request request = new Request.Builder()
-                .url("http://192.168.43.155:8000/api/Blog/")
-                .get()
-                .addHeader("Cache-Control", "no-cache")
-                .addHeader("Postman-Token", "f04a3d72-0496-465e-8db1-4ec282370f2e")
-                .build();
-
-        Log.d(TAG, "onCreate: request is built");
-
-        client.newCall(request).enqueue(new Callback(){
-            @Override
-            public void onFailure(Request request, IOException e) {
-                Log.d("HTTPRequestTest", "Shit happened");
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onResponse(Response response) throws IOException {
-                if(!response.isSuccessful()){
-                    throw new IOException("Blablabla" + response);
-                }else{
-                    Log.d("HTTPRequestTest", "Request has been completed successfully");
-                    Log.d("HTTPRequestTest", response.body().string());
-                }
-            }
-        });
+//        OkHttpClient client = new OkHttpClient();
+//
+//        Request request = new Request.Builder()
+//                .url("http://192.168.43.155:8000/api/Blog/")
+//                .get()
+//                .addHeader("Cache-Control", "no-cache")
+//                .addHeader("Postman-Token", "f04a3d72-0496-465e-8db1-4ec282370f2e")
+//                .build();
+//
+//        Log.d(TAG, "onCreate: request is built");
+//
+//        client.newCall(request).enqueue(new Callback(){
+//            @Override
+//            public void onFailure(Request request, IOException e) {
+//                Log.d("HTTPRequestTest", "Shit happened");
+//                e.printStackTrace();
+//            }
+//
+//            @Override
+//            public void onResponse(Response response) throws IOException {
+//                if(!response.isSuccessful()){
+//                    throw new IOException("Blablabla" + response);
+//                }else{
+//                    Log.d("HTTPRequestTest", "Request has been completed successfully");
+//                    Log.d("HTTPRequestTest", response.body().string());
+//
+//
+//
+//
+//                }
+//            }
+//        });
 
         jsonArrayBuilder();
         initRecyclerView();

@@ -34,6 +34,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
     </activity>
+        <activity android:name=".RecyclerViewActivity"/>
         <activity android:name=".SuperviserActivity" />
         <activity android:name=".VoditelActivity" />
         <activity android:name=".MenedzherActivity" />

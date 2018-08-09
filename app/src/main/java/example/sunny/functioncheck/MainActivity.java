@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     if (name.equals("manager@gmail.com")){
                         finish();
-                        startActivity(new Intent(MainActivity.this, MenedzherActivity.class));
+                        startActivity(new Intent(MainActivity.this, RecyclerViewActivity.class));
                     }
 
                     Toast.makeText(MainActivity.this, "Вы успешно вошли", Toast.LENGTH_SHORT).show();
